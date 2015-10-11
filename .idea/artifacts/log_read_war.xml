@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="log.read:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="log-read-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="log.read:war exploded" />
+    </root>
+  </artifact>
+</component>

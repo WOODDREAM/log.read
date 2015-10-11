@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       <bean id="quartzTask" class="jettylog.task.QuartzTask">
+       </bean>
+       <bean id="scheduledExecutorService" class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+              <property name="awaitTerminationSeconds" value="300"/>
+              <property name="continueScheduledExecutionAfterException" value="false"/>
+              <property name="poolSize" value="1"/>
+              <property name="scheduledExecutorTasks">
+                     <list>
+                            <ref bean="scheduledExecutorTask"/>
+                     </list>
+              </property>
+              <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+              <property name="threadPriority" value="1"/>
+       </bean>
+       <bean id="scheduledExecutorTask" class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+              <property name="fixedRate" value="true"/>
+              <property name="period" value="1"/>
+              <property name="timeUnit" value="DAYS"/>
+              <property name="runnable" ref="quartzTask"/>
+       </bean>
+</beans>
