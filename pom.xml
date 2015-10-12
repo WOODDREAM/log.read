@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <properties>
-        <springframework>4.1.5.RELEASE</springframework>
+        <springframework>4.1.6.RELEASE</springframework>
         <nutz>1.b.52</nutz>
         <mysql>5.1.8</mysql>
         <log4j>1.2.17</log4j>
@@ -20,6 +20,16 @@
         <servlet-testing-framework>0.1.0</servlet-testing-framework>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.4.1.1</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>

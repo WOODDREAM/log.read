@@ -3,6 +3,7 @@ package jettylog.service.impl;
 import jettylog.bean.JsErrorMonitor;
 import jettylog.dao.IJsErrorMonitorDao;
 import jettylog.service.IJsErrorMonitorService;
+import org.nutz.dao.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,5 +74,10 @@ public class JsErrorMonitorServiceImpl implements IJsErrorMonitorService {
             jsErrorMonitorDao.insertJsErrorMonitorTable(jsErrorMonitor);
         }
 
+    }
+
+    @Override
+    public QueryResult queryJsErrorMonitor(String date, int pagerNumber, int pagerSize) throws Exception {
+        return jsErrorMonitorDao.queryJsErrorMonitorTable(date,pagerNumber,pagerSize);
     }
 }

@@ -4,9 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
        <bean id="dataSource" class="org.nutz.dao.impl.SimpleDataSource">
               <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-              <property name="jdbcUrl" value="jdbc:mysql://10.1.6.10:3306/weixin_jetty_log"/>
-              <!--<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/weixin_jetty_log"/>-->
-              <property name="username" value="twodfire"/>
+              <!--<property name="jdbcUrl" value="jdbc:mysql://10.1.6.10:3306/weixin_jetty_log"/>-->
+              <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/weixin_jetty_log"/>
+              <!--<property name="username" value="twodfire"/>-->
+              <property name="username" value="root"/>
               <property name="password" value="123456"/>
        </bean>
        <bean id="nutzDao" class="org.nutz.dao.impl.NutDao">

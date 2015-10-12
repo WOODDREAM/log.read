@@ -6,6 +6,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * User:huangtao
@@ -21,12 +22,17 @@ public class JSErrorMonitorControllerTest extends BaseControllerTest {
 
     @Test
     public void testStartLogTask() throws Exception {
-        mockMvc.perform(get("/read/log/js/error")).andReturn().getResponse();
+        mockMvc.perform(get("/read/log/js/error/read/file")).andReturn().getResponse();
     }
 
     @Test
-    public void teatBatchTask() throws Exception {
-        mockMvc.perform(get("/read/log/batch/21/2015-09-10"))
+    public void testBatchTask() throws Exception {
+        mockMvc.perform(get("/read/log/js/error/batch/21/2015-09-10"))
                 .andReturn().getResponse();
+    }
+    @Test
+    public void testQuery() throws Exception{
+        mockMvc.perform(post("/read/log/js/error/query").param("date", "2015-09-30").param("page_number","1").param("page_size","10"))
+                .andReturn().getResponse().getContentAsString();
     }
 }

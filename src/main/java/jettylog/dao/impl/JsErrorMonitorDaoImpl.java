@@ -4,11 +4,14 @@ import jettylog.bean.JsErrorMonitor;
 import jettylog.dao.IJsErrorMonitorDao;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
+import org.nutz.dao.QueryResult;
+import org.nutz.dao.pager.Pager;
 import org.nutz.trans.Atom;
 import org.nutz.trans.Trans;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,5 +53,15 @@ public class JsErrorMonitorDaoImpl implements IJsErrorMonitorDao {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Override
+    public QueryResult queryJsErrorMonitorTable(String date,int pagerNumber, int pagerSize) throws Exception {
+
+        Pager pager = nutzDao.createPager(pagerNumber,pagerSize);
+        nutzDao.query(JsErrorMonitor.class,Cnd.where("run_date","LIKE",date),pager);
+        LinkedList<JsErrorMonitor> linkedList = (LinkedList<JsErrorMonitor>) nutzDao.query(JsErrorMonitor.class,Cnd.where("run_date","LIKE",date),pager);
+        pager.setRecordCount(nutzDao.count(JsErrorMonitor.class));
+        return new QueryResult(linkedList,pager);
     }
 }
