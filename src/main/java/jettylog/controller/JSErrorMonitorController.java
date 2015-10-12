@@ -76,7 +76,7 @@ public class JSErrorMonitorController {
                             @PathVariable("startTime") String startTime) throws Exception {
         if (!(null == taskNumber || 0 == taskNumber.intValue()
                 || null == startTime || startTime.trim().isEmpty()
-                || !combineString.recognizeTaskDate(startTime))) {
+                || !combineString.recogizePureDate(startTime))) {
             List<String> dateTask = combineString.taskTime(startTime, taskNumber);
             for (int i = 0; i < dateTask.size(); i++) {
                 String localFileLocalPath = ReadFile.getFilePath(dateTask.get(i).toString(), Constants.Task.JS_ERROR_MONITOR);
@@ -90,7 +90,7 @@ public class JSErrorMonitorController {
                                 && !date.isEmpty() && !Constants.Task.JS_ERROR_MONITOR.isEmpty()) {
                             jsErrorMonitorService.createJSTable(date);
                             List<String> stringList = readFile.readFileByLine(localFileLocalPath);
-                            if (null != stringList) {
+                            if (null != stringList && stringList.size()>0) {
                                 for (String tempString : stringList) {
                                     jsErrorMonitorService.insertJsErrorMonitor(tempString);
                                 }
@@ -107,4 +107,5 @@ public class JSErrorMonitorController {
         }
         return "params is illegal";
     }
+
 }

@@ -76,7 +76,7 @@ public class WatchOrderPayMonitorController {
     /**
      * 批量操作
      *
-     * @param monitorName 监控器名称，示例：watch_order_pay(注意不带monitor。统一制定)
+     * @param taskNumber 监控器名称，示例：watch_order_pay(注意不带monitor。统一制定)
      * @param taskNumber 任务数量
      * @param startTime  起始时间（示例：2015-09-10）
      */
@@ -85,7 +85,7 @@ public class WatchOrderPayMonitorController {
     public String batchTask(@PathVariable("taskNumber")Integer taskNumber, @PathVariable("startTime")String startTime) {
             if(!(null == taskNumber || 0 == taskNumber.intValue()
                 || null == startTime || startTime.trim().isEmpty()
-                || !combineString.recognizeTaskDate(startTime))){
+                || !combineString.recogizePureDate(startTime))){
         List<String> dateTask = combineString.taskTime(startTime,taskNumber);
         String monitorName = Constants.Task.WATCH_ORDER_PAY_MONITOR;
         for (int i=0; i < dateTask.size(); i++) {
@@ -100,7 +100,7 @@ public class WatchOrderPayMonitorController {
                         watchOrderPayService.createWatchOrderPayMonitor(date);
                         List<String> stringList = readFile.readFileByLine(localFileLocalPath);
                         List<String> tempList = new LinkedList<String>();
-                        if (null != stringList) {
+                        if (null != stringList && stringList.size()>0) {
                             for (String tempString : stringList) {
                                 if (!tempString.isEmpty() && null != tempString.trim()) {
                                     if (!tempString.startsWith("-----------------------------------------")

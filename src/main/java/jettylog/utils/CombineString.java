@@ -2,8 +2,10 @@ package jettylog.utils;
 
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +45,15 @@ public class CombineString {
         }
     }
 
+    public boolean recogizePureDate(String str){
+        Pattern pat = Pattern.compile(dateRegExp);
+        Matcher mat = pat.matcher(str);
+        boolean rs = mat.find();
+        if (rs) {
+            return true;
+        }
+        return false;
+    }
     public boolean recognizeTaskDate(String str) {
         Pattern pat = Pattern.compile(dataRegExp);
         Matcher mat = pat.matcher(str);
@@ -52,7 +63,8 @@ public class CombineString {
         }
         return false;
     }
-    public boolean recognizeStartWithErrorCode(String str){
+
+    public boolean recognizeStartWithErrorCode(String str) {
         Pattern pat = Pattern.compile(errorCodeExp);
         Matcher mat = pat.matcher(str);
         boolean rs = mat.find();
@@ -195,69 +207,92 @@ public class CombineString {
         return false;
     }
 
-    public List<String> taskTime(String startTime,int taskNumber) {
-        if(taskNumber >0) {
-            int lastInt  = startTime.charAt(startTime.length() - 1) -'0';
-            int last2Int = startTime.charAt(startTime.length() - 2) - '0';
-            int last3Int = startTime.charAt(startTime.length() - 4) - '0';
-            int last4Int = startTime.charAt(startTime.length() - 5) - '0';
-            int last5Int = startTime.charAt(startTime.length() - 7) - '0';
-            int last6Int = startTime.charAt(startTime.length() - 8) - '0';
-            int last7Int = startTime.charAt(startTime.length() - 9) - '0';
-            int last8Int = startTime.charAt(startTime.length() - 10) - '0';
-            int month = last4Int * 10 + last3Int;
-            int day = last2Int * 10 + lastInt ;
-            int year = last8Int*1000+last7Int*100+last6Int * 10 + last5Int;
-            String date = getDate(month, day, year);
-            dateTask.add(date);
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(year+"-"+month+"-");
-            day++;
-            if(day<10){
-                stringBuilder.append("0"+day);
-            }
-            taskTime(stringBuilder.toString(), taskNumber - 1);
+    public List<String> taskTime(String startTime, int taskNumber) {
+        if (taskNumber > 0) {
+            Map<String, Integer> dateMap = getDateMap(startTime);
+            String dateForList = getDate(dateMap.get("month"), dateMap.get("day") - 1, dateMap.get("year"));
+            dateTask.add(dateForList);
+            String date = getDate(dateMap.get("month"), dateMap.get("day"), dateMap.get("year"));
+            taskTime(date, taskNumber - 1);
         }
-            return dateTask;
+        return dateTask;
     }
 
-    private String getDate(int month, int day,int year) {
+    private Map<String, Integer> getDateMap(String startTime) {
+        Map<String, Integer> dateMap = new LinkedHashMap<String, Integer>();
+        int lastInt = startTime.charAt(startTime.length() - 1) - '0';
+        int last2Int = startTime.charAt(startTime.length() - 2) - '0';
+        int last3Int = startTime.charAt(startTime.length() - 4) - '0';
+        int last4Int = startTime.charAt(startTime.length() - 5) - '0';
+        int last5Int = startTime.charAt(startTime.length() - 7) - '0';
+        int last6Int = startTime.charAt(startTime.length() - 8) - '0';
+        int last7Int = startTime.charAt(startTime.length() - 9) - '0';
+        int last8Int = startTime.charAt(startTime.length() - 10) - '0';
+        int month = last4Int * 10 + last3Int;
+        int day = last2Int * 10 + lastInt;
+        int year = last8Int * 1000 + last7Int * 100 + last6Int * 10 + last5Int;
+        dateMap.put("month",month);
+        dateMap.put("day",day);
+        dateMap.put("year",year);
+        return dateMap;
+    }
+
+    private String getDate(int month, int day, int year) {
+        if (12 == month && 31 == day) {
+            year++;
+        }
+        String monthStr, dayStr;
         StringBuilder strbuilder = new StringBuilder();
-        if(0 == (year%4)) {
-            if(2 == month && day == 29 ){
-                month++;
+        if (0 == (year % 4)) {
+            if (2 == month && day >= 29) {
+                ++month;
                 day = 1;
-                strbuilder.append(year+"-"+month+"-"+day);
+                strbuilder.append(year + "-0" + month + "-0" + day);
                 return strbuilder.toString();
             }
         }
-        if(2 == month && day == 28 ){
+        if (0 != (year % 4) && 2 == month && day >= 28) {
             month++;
             day = 1;
-            strbuilder.append(year+"-"+month+"-"+day);
+            strbuilder.append(year + "-0" + month + "-0" + day);
             return strbuilder.toString();
         }
-        if(4 == month || 6 == month || 9 == month || 11 == month){
-            if(30 == day){
+        if (4 == month || 6 == month || 9 == month || 11 == month) {
+            if (30 <= day) {
                 month++;
+                monthStr = createMonth(month);
                 day = 1;
-                strbuilder.append(year+"-"+month+"-"+day);
+                strbuilder.append(year + "-" + monthStr + "-0" + day);
                 return strbuilder.toString();
             }
         }
-        if(31 == day){
-                month++;
-                day = 1;
-                strbuilder.append(year+"-"+month+"-"+day);
-                return strbuilder.toString();
+        if (31 <= day) {
+            month++;
+            monthStr = createMonth(month);
+            day = 1;
+            strbuilder.append(year + "-" + monthStr + "-0" + day);
+            return strbuilder.toString();
         }
-        strbuilder.append(year+"-"+month+"-");
-        if(day<=9){
-            strbuilder.append("0"+day);
-        }else {
-            strbuilder.append(day);
-        }
+        monthStr = createMonth(month);
+        dayStr = createDay(++day);
+        strbuilder.append(year + "-" + monthStr + "-" + dayStr);
         return strbuilder.toString();
+    }
+
+    private String createDay(int day) {
+        String dayStr;
+        if (day < 10) {
+            dayStr = "0" + day;
+        } else dayStr = "" + day;
+        return dayStr;
+    }
+
+    private String createMonth(int month) {
+        String monthStr;
+        if (month < 10) {
+            monthStr = "0" + month;
+        } else monthStr = "" + month;
+        return monthStr;
     }
 }
 

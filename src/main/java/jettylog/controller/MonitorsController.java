@@ -88,7 +88,7 @@ public class MonitorsController {
                             @PathVariable("startTime") String startTime) throws Exception {
         if (null == taskNumber || 0 == taskNumber.intValue()
                 || null == startTime || startTime.trim().isEmpty()
-                || !combineString.recognizeTaskDate(startTime)) {
+                || !combineString.recogizePureDate(startTime)) {
             return "params is illegal";
         }
         List<String> dateTask = combineString.taskTime(startTime, taskNumber);
@@ -103,21 +103,21 @@ public class MonitorsController {
                     if (null != date && null != monitorName && !date.isEmpty() && !monitorName.isEmpty()) {
                         monitorsService.createMonitorsTable(monitorName, date);
                         List<String> stringList = readFile.readFileByLine(localFileLocalPath);
-                        if (null != stringList) {
+                        if (null != stringList && stringList.size()>0) {
                             for (String tempString : stringList) {
                                 if(combineString.recognizeStartWithData(tempString) || combineString.recognizeStartWithErrorCode(tempString)){
                                     monitorsService.insertMonitors(tempString, monitorName, date);
                                 }
                             }
                         }
-                        return "ok";
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                return "error";
             }
         }
-        return "error";
+        return "ok";
     }
 
 }

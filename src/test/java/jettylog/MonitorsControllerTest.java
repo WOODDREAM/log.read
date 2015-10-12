@@ -30,11 +30,15 @@ public class MonitorsControllerTest extends BaseControllerTest {
 
     @Test
     public void teatBatchTask() throws Exception {
-        mockMvc.perform(get("/read/log/batch/"+Constants.Task.SERVICE_MONITOR+"/9/2015-10-01")).andReturn().getResponse();
-        mockMvc.perform(get("/read/log/batch/"+Constants.Task.WATCH_MODIFY_CART_MONITOR+"/9/2015-10-01")).andReturn().getResponse();
-        mockMvc.perform(get("/read/log/batch/"+Constants.Task.STARTTIME+"/9/2015-10-01")).andReturn().getResponse();
-        mockMvc.perform(get("/read/log/batch/"+Constants.Task.OAUTH_MONITOR+"/9/2015-10-01")).andReturn().getResponse();
-        mockMvc.perform(get("/read/log/batch/"+Constants.Task.PAYMENT_MONITOR+"/9/2015-10-01")).andReturn().getResponse();
-        mockMvc.perform(get("/read/log/batch/"+Constants.Task.SYS_MONITOR+"/1/2015-10-10")).andReturn().getResponse();
+        mockMvc.perform(get("/read/log/batch/"+Constants.Task.SERVICE_MONITOR+"/31/2015-09-10")).andReturn().getResponse();
+        mockMvc.perform(get("/read/log/batch/"+Constants.Task.WATCH_MODIFY_CART_MONITOR+"/31/2015-09-10")).andReturn().getResponse();
+        mockMvc.perform(get("/read/log/batch/"+Constants.Task.STARTTIME+"/31/2015-09-10")).andReturn().getResponse();
+        mockMvc.perform(get("/read/log/batch/"+Constants.Task.OAUTH_MONITOR+"/31/2015-09-10")).andReturn().getResponse();
+        mockMvc.perform(get("/read/log/batch/"+Constants.Task.PAYMENT_MONITOR+"/31/2015-09-10")).andReturn().getResponse();
+        mockMvc.perform(get("/read/log/batch/"+Constants.Task.SYS_MONITOR+"/31/2015-09-10")).andReturn().getResponse();
+        StandaloneMockMvcBuilder standaloneMockMvcBuilder = MockMvcBuilders.standaloneSetup(jsErrorMonitorController);
+        this.mockMvc = standaloneMockMvcBuilder.build();
+        mockMvc.perform(get("/read/log/batch/21/2015-09-10"))
+                .andReturn().getResponse();
     }
 }

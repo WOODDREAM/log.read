@@ -25,7 +25,7 @@ public class WatchOrderPayMonitorControllerTest extends BaseControllerTest {
 
     @Test
     public void teatBatchTask() throws Exception {
-        mockMvc.perform(get("/read/log/watch/order/pay/9/2015-10-01"))
+        mockMvc.perform(get("/read/log/watch/order/pay/30/2015-09-10"))
                 .andReturn().getResponse();
     }
 }
