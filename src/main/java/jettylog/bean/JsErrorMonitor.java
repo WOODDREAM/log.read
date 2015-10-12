@@ -12,8 +12,10 @@ public class JsErrorMonitor {
     @Id
     private int id;
     @Column("run_date")
+    @ColDefine(type= ColType.VARCHAR, width=16)
     private String runDate;
     @Column("time")
+    @ColDefine(type= ColType.VARCHAR, width=32)
     private String time;
     @Column("navigator")
     @ColDefine(type= ColType.VARCHAR, width=2014)
@@ -42,8 +44,10 @@ public class JsErrorMonitor {
     @ColDefine(type= ColType.VARCHAR, width=512)
     private String scripturi;
     @Column("line_number")
+    @ColDefine(type= ColType.VARCHAR, width=8)
     private String lineNumber;
     @Column("column_number")
+    @ColDefine(type= ColType.VARCHAR, width=8)
     private String columnNumber;
     @Column("error_obj")
     @ColDefine(type= ColType.VARCHAR, width=1024)

@@ -18,6 +18,7 @@ public class MonitorsDetail {
     @ColDefine(type= ColType.VARCHAR, width=16)
     private String endTime;
     @Column("pro_time")
+    @ColDefine(type= ColType.VARCHAR, width=32)
     private int proTime;
     @Column("opt_time")
     @ColDefine(type= ColType.VARCHAR, width=32)
