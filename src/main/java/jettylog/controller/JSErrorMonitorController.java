@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +34,8 @@ public class JSErrorMonitorController {
     private CombineString combineString;
 
     @ResponseBody
-    @RequestMapping(value = "/current",method = RequestMethod.GET)
-    public String readJsErrorMonitorFile() {
+    @RequestMapping(value = "/current", method = RequestMethod.GET)
+    public JsonResult readJsErrorMonitorFile() {
         Date nowDate = new Date();
         SimpleDateFormat format = new SimpleDateFormat(Constants.Task.SIMPLE_DATE_FORMAT);
         String nowTime = format.format(nowDate);
@@ -59,21 +60,21 @@ public class JSErrorMonitorController {
                         }
                     }
                 }
-                return "ok";
+                return JsonResult.returnSuccessMsg("ok");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "error";
+        return JsonResult.returnFail("error");
     }
 
     /**
      * 批量操作
      */
     @ResponseBody
-    @RequestMapping(value = "/batch",method =RequestMethod.POST)
-    public String batchTask(@RequestParam(value = "task_number",required = true) Integer taskNumber,
-                            @RequestParam(value = "start_time",required = true) String startTime) throws Exception {
+    @RequestMapping(value = "/batch", method = RequestMethod.POST)
+    public JsonResult batchTask(@RequestParam(value = "task_number", required = true) Integer taskNumber,
+                            @RequestParam(value = "start_time", required = true) String startTime) throws Exception {
         if (!(null == taskNumber || 0 == taskNumber.intValue()
                 || null == startTime || startTime.trim().isEmpty()
                 || !combineString.recogizePureDate(startTime))) {
@@ -100,18 +101,19 @@ public class JSErrorMonitorController {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return "error";
+
+                    return JsonResult.returnFail("error");
                 }
             }
-            return "ok";
+            return JsonResult.returnSuccessMsg("ok");
         }
-        return "params is illegal";
+        return JsonResult.returnSuccessMsg("params is illegal");
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public JsonResult queryJsErrorMonitors(@RequestParam(value = "date", required = true) String date,
+    public synchronized JsonResult queryJsErrorMonitors(@RequestParam(value = "date", required = true) String date,
                                            @RequestParam(value = "page_number", required = true) int pageNumber,
                                            @RequestParam(value = "page_size", required = true) int pageSize) {
         try {
@@ -132,7 +134,16 @@ public class JSErrorMonitorController {
 //                jsErrorMonitorVo.setPageSize(queryResult.getPager().getPageSize());
 //                jsErrorMonitorVo.setRecordCount(queryResult.getPager().getRecordCount());
 //                BeanUtils.copyProperties(queryResult,jsErrorMonitors);
-                return JsonResult.returnSuccess(queryResult);
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("pageCount", queryResult.getPager().getPageCount() == 0 ? 0 : queryResult.getPager().getPageCount());
+                map.put("pageNumber", queryResult.getPager().getPageNumber() == 0 ? 0 : queryResult.getPager().getPageNumber());
+                map.put("pageSize", queryResult.getPager().getPageSize() == 0 ? 0 : queryResult.getPager().getPageSize());
+                map.put("recordCount", queryResult.getPager().getRecordCount() == 0 ? 0 : queryResult.getPager().getPageNumber());
+                if(0 == queryResult.getList().size()){
+                    return JsonResult.returnSuccess(map);
+                }
+                map.put("list", queryResult.getList());
+                return JsonResult.returnSuccess(map);
             }
             return JsonResult.returnFail("param:date is wrong!");
         } catch (Exception e) {
