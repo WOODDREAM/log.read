@@ -27,8 +27,9 @@ public class JSErrorMonitorControllerTest extends BaseControllerTest {
 
     @Test
     public void testBatchTask() throws Exception {
-        mockMvc.perform(get("/read/log/js/error/batch/21/2015-09-10"))
-                .andReturn().getResponse();
+//        mockMvc.perform(get("/read/log/js/error/batch/1/2015-10-25"))
+//                .andReturn().getResponse();
+        jsErrorMonitorController.batchTask(1,"2015-10-25");
     }
     @Test
     public void testQuery() throws Exception{

@@ -20,6 +20,7 @@
         <servlet-testing-framework>0.1.0</servlet-testing-framework>
     </properties>
     <dependencies>
+        <!--跨域访问-->
         <dependency>
             <groupId>com.thetransactioncompany</groupId>
             <artifactId>cors-filter</artifactId>
@@ -30,6 +31,7 @@
             <artifactId>java-property-utils</artifactId>
             <version>1.9.1</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
